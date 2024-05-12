@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visitors</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    /* Custom styles for the Contacts page */
+    .add-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar}"></div>
+
+<div class="container mt-5">
+  <h1>Visitors</h1>
+  <!-- Table for listing contacts -->
+  <table class="table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Contact</th>
+      <th>Event</th>
+      <th>Role</th>
+      <th>Date</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Iterate over visitors and display their information -->
+    <tr th:each="visitor : ${visitors}">
+      <td th:text="${visitor.getVisitorId()}"></td>
+      <td th:text="${visitor.contact.contactName}"></td>
+      <td th:text="${visitor.event.eventName}"></td>
+      <td th:text="${visitor.visitorRole}"></td>
+      <td th:text="${#dates.format(visitor.getVisitorVisitDate(),'yyyy-MM-dd')}"></td>
+      <td>
+        <!-- Buttons for actions -->
+        <button class="btn btn-primary btn-sm">Create</button>
+        <a th:href="@{'/visitors/edit/' + ${visitor.getVisitorId()}}" class="btn btn-secondary btn-sm">Edit</a>
+        <form th:action="@{/visitors/delete}" th:method="post" class="d-inline">
+          <input type="hidden" name="visitorId" th:value="${visitor.visitorId}" />
+          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+        </form>      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<!-- Add button -->
+<button class="btn btn-primary add-button" data-toggle="modal" data-target="#addContactModal">+</button>
+
+<!-- Modal for adding a new contact -->
+<div class="modal fade" id="addContactModal" tabindex="-1" role="dialog" aria-labelledby="addContactModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addContactModalLabel">Add New Visitor</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Form for adding a new contact -->
+        <form action="/visitors/add" method="post">
+          <div class="form-group">
+            <label for="visitorsSelect">Select Contact</label>
+            <select class="form-control" id="visitorsSelect" name="contactId" required>
+              <!-- Iterate over the list of contacts and populate the dropdown -->
+              <option th:each="contact : ${contacts}" th:value="${contact.contactId}" th:text="${contact.contactName}"></option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="visitorsEvent">Select Event</label>
+            <select class="form-control" id="visitorsEvent" name="eventId" required>
+              <!-- Iterate over the list of events and populate the dropdown -->
+              <option th:each="event : ${events}" th:value="${event.eventId}" th:text="${event.eventName}"></option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="visitorsRole">Role</label>
+            <input type="text" class="form-control" id="visitorsRole" name="role" placeholder="Role" required>
+          </div>
+          <div class="form-group">
+            <label for="visitorsDate">Date</label>
+            <input type="date" class="form-control" id="visitorsDate" name="date" placeholder="Date" required>
+          </div>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Bootstrap and jQuery scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

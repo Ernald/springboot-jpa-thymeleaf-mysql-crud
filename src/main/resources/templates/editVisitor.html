@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Visitors</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar}"></div>
+
+<div class="container mt-5">
+    <h1>Edit Visitors</h1>
+    <form action="/visitors/update" method="post">
+        <input type="hidden" name="visitorId" th:value="${visitor.visitorId}" />
+        <div class="form-group">
+            <label for="contactSelect">Select Contact</label>
+            <select class="form-control" id="contactSelect" name="contactId" required>
+                <!-- Iterate over the list of contacts and populate the dropdown -->
+                <option th:each="contact : ${contacts}" th:value="${contact.contactId}" th:text="${contact.contactName}"
+                        th:selected="${contact.contactId eq visitor.contact.contactId}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="eventSelect">Select Event</label>
+            <select class="form-control" id="eventSelect" name="eventId" required>
+                <!-- Iterate over the list of events and populate the dropdown -->
+                <option th:each="event : ${events}" th:value="${event.eventId}" th:text="${event.eventName}"
+                        th:selected="${event.eventId eq visitor.event.eventId}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="visitorRole">Role</label>
+            <input class="form-control" type="text" id="visitorRole" name="visitorRole" th:value="${visitor.visitorRole}" />
+        </div>
+        <div class="form-group">
+            <label for="visitorVisitDate">Date</label>
+            <!-- Use Thymeleaf's date format to ensure correct submission -->
+            <input type="date" class="form-control" id="visitorVisitDate" name="visitorVisitDate" th:value="${#dates.format(visitor.visitorVisitDate, 'yyyy-MM-dd')}">
+        </div>
+        <div class="form-group">
+            <!-- Add other fields for editing -->
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="/visitors"><button type="button" class="btn btn-secondary">Back</button></a>
+        </div>
+    </form></div>
+</body>
+</html>

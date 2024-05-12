@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leads</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Custom styles for the Contacts page */
+        .add-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar}"></div>
+
+
+<div class="container mt-5">
+    <h1>Leads</h1>
+    <!-- Table for listing leads -->
+    <!-- Table for listing leads -->
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Contact</th>
+            <th>Phone</th>
+            <th>Interest</th>
+            <th>Experience</th>
+            <th>Role</th>
+            <th>Source</th>
+            <th>Contacted</th>
+            <th>Actions</th> <!-- New column for buttons -->
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterate over the list of leads -->
+        <tr th:each="lead : ${leads}">
+            <td th:text="${lead.getLeadId()}">ID</td>
+            <td th:text="${lead.contact.contactName}">Contact Name</td>
+            <td th:text="${lead.contact.contactPhone}">Contact Phone</td>
+            <td th:text="${lead.leadInterest}">Lead Interest</td>
+            <td th:text="${lead.leadExperience}">Lead Experience</td>
+            <td th:text="${lead.leadRole}">Lead Role</td>
+            <td th:text="${lead.leadSource}">Lead Source</td>
+            <td th:text="${lead.leadContacted} ? 'Yes' : 'No'">Contacted</td>
+            <td>
+                <!-- Buttons for actions -->
+                <button class="btn btn-primary btn-sm">Wapp msg</button>
+                <button class="btn btn-primary btn-sm">Create</button>
+                <a th:href="@{/leads/edit/{leadId}(leadId=${lead.getLeadId()})}" class="btn btn-secondary btn-sm">Edit</a>
+                <form th:action="@{/leads/delete}" method="post" class="d-inline">
+                    <input type="hidden" name="leadId" th:value="${lead.getLeadId()}">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table></div><!-- Add button -->
+<button class="btn btn-primary add-button" data-toggle="modal" data-target="#addLeadModal">+</button>
+
+<!-- Modal for adding a new lead -->
+<div class="modal fade" id="addLeadModal" tabindex="-1" role="dialog" aria-labelledby="addLeadModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addLeadModalLabel">Add Lead</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form for adding a new lead -->
+                <form th:action="@{/leads/add}" method="post">
+                    <div class="form-group">
+                        <label for="contactSelect">Select Contact</label>
+                        <select class="form-control" id="contactSelect" name="contactId" required>
+                            <!-- Iterate over the list of contacts and populate the dropdown -->
+                            <option th:each="contact : ${contacts}" th:value="${contact.contactId}" th:text="${contact.contactName}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="leadInterest">Interest</label>
+                        <input type="text" class="form-control" id="leadInterest" name="leadInterest" placeholder="Enter lead interest" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="leadExperience">Experience</label>
+                        <input type="text" class="form-control" id="leadExperience" name="leadExperience" placeholder="Enter lead experience" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="leadRole">Role</label>
+                        <input type="text" class="form-control" id="leadRole" name="leadRole" placeholder="Enter lead role" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="leadSource">Source</label>
+                        <input type="text" class="form-control" id="leadSource" name="leadSource" placeholder="Enter lead source" required>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="leadContacted" name="leadContacted">
+                        <label class="form-check-label" for="leadContacted">Contacted</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap and jQuery scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

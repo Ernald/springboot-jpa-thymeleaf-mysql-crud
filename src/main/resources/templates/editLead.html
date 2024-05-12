@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Lead</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar}"></div>
+
+<div class="container mt-5 mb-5">
+    <h1>Edit Lead</h1>
+    <form th:action="@{/leads/update}" method="post">
+        <input type="hidden" name="leadId" th:value="${lead.getLeadId()}">
+        <div class="form-group">
+            <label for="contactSelect">Select Contact</label>
+            <select class="form-control" id="contactSelect" name="contactId" required>
+                <!-- Iterate over the list of contacts and populate the dropdown -->
+                <option th:each="contact : ${contacts}" th:value="${contact.contactId}" th:text="${contact.contactName}"
+                        th:selected="${contact.contactId eq lead.contact.contactId}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="leadInterest">Interest</label>
+            <input type="text" class="form-control" id="leadInterest" name="leadInterest" th:value="${lead.leadInterest}" required>
+        </div>
+        <div class="form-group">
+            <label for="leadExperience">Experience</label>
+            <input type="text" class="form-control" id="leadExperience" name="leadExperience" th:value="${lead.leadExperience}" required>
+        </div>
+        <div class="form-group">
+            <label for="leadRole">Role</label>
+            <input type="text" class="form-control" id="leadRole" name="leadRole" th:value="${lead.leadRole}" required>
+        </div>
+        <div class="form-group">
+            <label for="leadRole">Source</label>
+            <input type="text" class="form-control" id="leadSource" name="leadSource" th:value="${lead.leadSource}" required>
+        </div>
+        <div class="form-check mb-2">
+            <input type="checkbox" class="form-check-input" id="leadContacted" name="leadContacted"
+                   th:value="${lead.leadContacted}" th:checked="${lead.leadContacted}">
+            <label class="form-check-label" for="leadContacted">Contacted</label>
+        </div>
+        <!-- Add other fields similar to the form in the addLeadModal -->
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="/leads"><button type="button" class="btn btn-secondary">Back</button></a>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

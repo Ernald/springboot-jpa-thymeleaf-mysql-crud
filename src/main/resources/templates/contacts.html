@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacts</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Custom styles for the Contacts page */
+        .add-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar}"></div>
+
+
+
+<div class="container mt-5">
+    <h1>Contacts</h1>
+    <!-- Table for listing contacts -->
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterate over the list of contacts -->
+        <tr th:each="contact : ${contacts}">
+            <td th:text="${contact.contactId}"></td>
+            <td th:text="${contact.contactName}">Contact Name</td>
+            <td th:text="${contact.contactEmail}">contact@example.com</td>
+            <td th:text="${contact.contactPhone}">123-456-7890</td>
+            <td>
+                <button class="btn btn-primary btn-sm">Create</button>
+                <!-- Edit button -->
+                <a th:href="@{/contacts/edit(id=${contact.contactId})}" class="btn btn-secondary btn-sm">Edit</a>
+                <!-- Delete form -->
+                <form th:action="@{/contacts/delete/{id}(id=${contact.contactId})}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+                </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<button class="btn btn-primary add-button" data-toggle="modal" data-target="#addContactModal">+</button>
+
+<!-- Modal for adding a new contact -->
+<div class="modal fade" id="addContactModal" tabindex="-1" role="dialog" aria-labelledby="addContactModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addContactModalLabel">Add Contact</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form for adding a new contact -->
+                <form action="#" th:action="@{/contacts/add}" th:object="${contact}" method="post">
+                    <div class="form-group">
+                        <label for="contactName">Name</label>
+                        <input type="text" class="form-control" id="contactName" th:field="*{contactName}" placeholder="Enter contact name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactPhone">Phone</label> <!-- Fixed typo here -->
+                        <input type="tel" class="form-control" id="contactPhone" th:field="*{contactPhone}" placeholder="Enter contact phone number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">Email</label>
+                        <input type="email" class="form-control" id="contactEmail" th:field="*{contactEmail}" placeholder="Enter contact email" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button> <!-- Changed type to submit -->
+                    </div>
+                </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap and jQuery scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
